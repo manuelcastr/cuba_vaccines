@@ -1,8 +1,8 @@
 from datetime import date
 
-from matplotlib.ticker import FuncFormatter
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 
 def read_data_file(filename):
