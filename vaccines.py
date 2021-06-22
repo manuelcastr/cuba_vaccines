@@ -44,6 +44,8 @@ def plot_accumulate_doses(labels, dates, numbers):
     plt.xlabel('Fecha')
     plt.ylabel('Cantidad')
 
+    plt.axvline(x=n_days-1 - 14, ls='--', c='darkgray', zorder=0)
+
     plt.legend(loc='upper left')
     plt.grid(ls=':', lw=.4, c='gray')
     plt.tight_layout()
@@ -58,10 +60,10 @@ def plot_daily_doses(labels, dates, numbers):
     width = .3
     for i in range(1, 4):
         values = (numbers[:, i] - np.roll(numbers[:, i], 1))[1:]
-        plt.bar(xs + width * (i-2), values, width, label=labels[i+1], zorder=1)
+        plt.bar(xs + width * (i-2), values, width, label=labels[i+1], zorder=100)
 
     totals = (numbers[:, 0] - np.roll(numbers[:, 0], 1))[1:]
-    plt.plot(xs, totals, marker='.', zorder=0, c='tab:red', label='Total diario')
+    plt.plot(xs, totals, marker='.', zorder=1, c='tab:red', label='Total diario')
     margin = totals.max() * .01
     for x, y in zip(xs, totals):
         plt.text(x, y + margin, f'{y:,}', ha='center', va='bottom', fontsize='small', zorder=100)
@@ -74,6 +76,8 @@ def plot_daily_doses(labels, dates, numbers):
     plt.gca().set_ylim(bottom=0, top=totals.max() * 1.1)
     plt.xlabel('Fecha')
     plt.ylabel('Cantidad')
+
+    plt.axvline(x=n_days-1 - 14, ls='--', c='darkgray', zorder=0)
 
     plt.legend(loc='upper center', ncol=4)
     plt.grid(ls=':', lw=.4, c='gray')
