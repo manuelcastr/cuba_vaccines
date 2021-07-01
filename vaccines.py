@@ -30,9 +30,9 @@ def plot_accumulate_doses(labels, dates, numbers):
     daily_values = numbers[:, 0] - np.roll(numbers[:, 0], 1)
     daily_values = daily_values[1:]  # Discard 1st day
     xs = range(1, n_days)
-    daily_bars = plt.bar(xs, daily_values, .5, zorder=10, label='Dosis diarias')
+    daily_bars = plt.bar(xs, daily_values, .5, zorder=10, label='Dosis diarias (miles)')
     for rect, value in zip(daily_bars, daily_values):
-        plt.text(rect.get_x() + rect.get_width() / 2, rect.get_height(), f'{value:,}',
+        plt.text(rect.get_x() + rect.get_width() / 2, rect.get_height(), f'{round(value, -3) // 10**3}',
                  ha='center', va='bottom', fontsize='small')
 
     plt.xticks(range(n_days), [d.strftime("%d/%m") for d in dates], rotation=45)
@@ -45,9 +45,11 @@ def plot_accumulate_doses(labels, dates, numbers):
     plt.ylabel('Cantidad')
 
     plt.axvline(x=n_days-1 - 14, ls='--', c='darkgray', zorder=0)
-
+    plt.axvline(x=n_days-1 - 28, ls='--', c='darkgray', zorder=0)
+    
     plt.legend(loc='upper left')
-    plt.grid(ls=':', lw=.4, c='gray')
+    plt.grid(which='major', ls='--', lw=.5, c='gray')
+    plt.grid(which='minor', axis='y', ls=':', lw=.3, c='gray')
     plt.tight_layout()
 
 
@@ -65,8 +67,9 @@ def plot_daily_doses(labels, dates, numbers):
     totals = (numbers[:, 0] - np.roll(numbers[:, 0], 1))[1:]
     plt.plot(xs, totals, marker='.', zorder=1, c='tab:red', label='Total diario')
     margin = totals.max() * .01
-    for x, y in zip(xs, totals):
-        plt.text(x, y + margin, f'{y:,}', ha='center', va='bottom', fontsize='small', zorder=100)
+    # for x, y in zip(xs, totals):
+    #     plt.text(x, y + margin, f'{round(y, -3) // 10**3}', 
+    #              ha='center', va='bottom', fontsize='small', zorder=100)
 
     plt.xticks(range(n_days), [d.strftime("%d/%m") for d in dates], rotation=45)
     plt.gca().get_yaxis().set_major_formatter(FuncFormatter(lambda x, p: format(int(x), ',')))
@@ -78,9 +81,11 @@ def plot_daily_doses(labels, dates, numbers):
     plt.ylabel('Cantidad')
 
     plt.axvline(x=n_days-1 - 14, ls='--', c='darkgray', zorder=0)
+    plt.axvline(x=n_days-1 - 28, ls='--', c='darkgray', zorder=0)
 
-    plt.legend(loc='upper center', ncol=4)
-    plt.grid(ls=':', lw=.4, c='gray')
+    plt.legend(loc='upper left', ncol=1)
+    plt.grid(which='major', ls='--', lw=.5, c='gray')
+    plt.grid(which='minor', axis='y', ls=':', lw=.3, c='gray')
     plt.tight_layout()
 
 
