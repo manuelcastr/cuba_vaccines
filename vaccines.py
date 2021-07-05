@@ -23,14 +23,14 @@ def plot_accumulate_doses(labels, dates, numbers):
 
     n_days = len(dates)
     xs = range(n_days)
-    plt.fill_between(xs, numbers[:, 1], label=labels[2], zorder=1)
-    plt.fill_between(xs, numbers[:, 2], label=labels[3], zorder=2)
-    plt.fill_between(xs, numbers[:, 3], label=labels[4], zorder=3)
+    plt.fill_between(xs, numbers[:, 1], label=labels[2], zorder=1, color='tab:blue')
+    plt.fill_between(xs, numbers[:, 2], label=labels[3], zorder=2, color='tab:green')
+    plt.fill_between(xs, numbers[:, 3], label=labels[4], zorder=3, color='tab:orange')
 
     daily_values = numbers[:, 0] - np.roll(numbers[:, 0], 1)
     daily_values = daily_values[1:]  # Discard 1st day
     xs = range(1, n_days)
-    daily_bars = plt.bar(xs, daily_values, .5, zorder=10, label='Dosis diarias (miles)')
+    daily_bars = plt.bar(xs, daily_values, .5, zorder=10, label='Dosis diarias (miles)', color='tab:red')
     for rect, value in zip(daily_bars, daily_values):
         plt.text(rect.get_x() + rect.get_width() / 2, rect.get_height(), f'{round(value, -3) // 10**3}',
                  ha='center', va='bottom', fontsize='small')
@@ -59,10 +59,12 @@ def plot_daily_doses(labels, dates, numbers):
 
     n_days = len(dates)
     xs = np.array(list(range(1, n_days)))
-    width = .3
+    width = .29
+    colors = ['tab:blue', 'tab:green', 'tab:orange']
     for i in range(1, 4):
         values = (numbers[:, i] - np.roll(numbers[:, i], 1))[1:]
-        plt.bar(xs + width * (i-2), values, width, label=labels[i+1], zorder=100)
+        plt.bar(xs + width * (i-2), values, width, label=labels[i+1], zorder=100, 
+                color=colors[i-1], edgecolor='k', linewidth=.5)
 
     totals = (numbers[:, 0] - np.roll(numbers[:, 0], 1))[1:]
     plt.plot(xs, totals, marker='.', zorder=1, c='tab:red', label='Total diario')
