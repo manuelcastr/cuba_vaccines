@@ -68,11 +68,6 @@ def plot_daily_doses(labels, dates, numbers):
 
     totals = (numbers[:, 0] - np.roll(numbers[:, 0], 1))[1:]
     plt.plot(xs, totals, marker='.', zorder=1, c='tab:red', label='Total diario')
-    margin = totals.max() * .01
-    # for x, y in zip(xs, totals):
-    #     plt.text(x, y + margin, f'{round(y, -3) // 10**3}', 
-    #              ha='center', va='bottom', fontsize='small', zorder=100)
-
     plt.xticks(range(n_days), [d.strftime("%d/%m") for d in dates], rotation=45)
     plt.gca().get_yaxis().set_major_formatter(FuncFormatter(lambda x, p: format(int(x), ',')))
     plt.minorticks_on()
