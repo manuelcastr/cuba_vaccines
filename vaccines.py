@@ -33,9 +33,13 @@ def plot_accumulate_doses(labels, dates, numbers):
     daily_bars = plt.bar(xs, daily_values, .5, zorder=10, label='Dosis diarias (miles)', color='tab:red')
     for rect, value in zip(daily_bars, daily_values):
         plt.text(rect.get_x() + rect.get_width() / 2, rect.get_height(), f'{round(value, -3) // 10**3}',
-                 ha='center', va='bottom', fontsize='small')
+                 ha='center', va='bottom', fontsize='x-small')
 
-    plt.xticks(range(n_days), [d.strftime("%d/%m") for d in dates], rotation=45)
+    x_labels = [d.strftime("%d/%m") for d in dates]
+    # for i in range(1, n_days-1):
+    #     if (n_days - i) % 7:
+    #         x_labels[i] = ''
+    plt.xticks(range(n_days), x_labels, rotation=45, fontsize='x-small')
     plt.gca().get_yaxis().set_major_formatter(FuncFormatter(lambda x, p: format(int(x), ',')))
     plt.minorticks_on()
     plt.gca().xaxis.set_tick_params(which='minor', bottom=False)
@@ -68,7 +72,11 @@ def plot_daily_doses(labels, dates, numbers):
 
     totals = (numbers[:, 0] - np.roll(numbers[:, 0], 1))[1:]
     plt.plot(xs, totals, marker='.', zorder=1, c='tab:red', label='Total diario')
-    plt.xticks(range(n_days), [d.strftime("%d/%m") for d in dates], rotation=45)
+    x_labels = [d.strftime("%d/%m") for d in dates]
+    # for i in range(1, n_days-1):
+    #     if (n_days - i) % 7:
+    #         x_labels[i] = ''
+    plt.xticks(range(n_days), x_labels, rotation=45, fontsize='small')
     plt.gca().get_yaxis().set_major_formatter(FuncFormatter(lambda x, p: format(int(x), ',')))
     plt.minorticks_on()
     plt.gca().xaxis.set_tick_params(which='minor', bottom=False)
