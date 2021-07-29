@@ -1,3 +1,4 @@
+#!python3.9
 from datetime import date
 
 import numpy as np
@@ -36,13 +37,14 @@ def plot_accumulate_doses(labels, dates, numbers):
                  ha='center', va='bottom', fontsize='x-small')
 
     x_labels = [d.strftime("%d/%m") for d in dates]
-    # for i in range(1, n_days-1):
-    #     if (n_days - i) % 7:
-    #         x_labels[i] = ''
-    plt.xticks(range(n_days), x_labels, rotation=45, fontsize='x-small')
+    for i in range(1, n_days-1):
+        if (n_days - i) % 7:
+            x_labels[i] = ''
+    plt.xticks(range(n_days), x_labels, rotation=45)
     plt.gca().get_yaxis().set_major_formatter(FuncFormatter(lambda x, p: format(int(x), ',')))
     plt.minorticks_on()
     plt.gca().xaxis.set_tick_params(which='minor', bottom=False)
+    plt.gca().xaxis.set_tick_params(which='major', pad=-2)
     plt.gca().set_xlim(left=-0.05)
     plt.gca().set_ylim(bottom=0)
     plt.xlabel('Fecha')
@@ -50,7 +52,8 @@ def plot_accumulate_doses(labels, dates, numbers):
 
     plt.axvline(x=n_days-1 - 14, ls='--', c='darkgray', zorder=0)
     plt.axvline(x=n_days-1 - 28, ls='--', c='darkgray', zorder=0)
-    
+    plt.axvline(x=n_days-1 - 56, ls='--', c='darkgray', zorder=0)
+
     plt.legend(loc='upper left')
     plt.grid(which='major', ls='--', lw=.5, c='gray')
     plt.grid(which='minor', axis='y', ls=':', lw=.3, c='gray')
@@ -73,13 +76,14 @@ def plot_daily_doses(labels, dates, numbers):
     totals = (numbers[:, 0] - np.roll(numbers[:, 0], 1))[1:]
     plt.plot(xs, totals, marker='.', zorder=1, c='tab:red', label='Total diario')
     x_labels = [d.strftime("%d/%m") for d in dates]
-    # for i in range(1, n_days-1):
-    #     if (n_days - i) % 7:
-    #         x_labels[i] = ''
-    plt.xticks(range(n_days), x_labels, rotation=45, fontsize='small')
+    for i in range(1, n_days-1):
+        if (n_days - i) % 7:
+            x_labels[i] = ''
+    plt.xticks(range(n_days), x_labels, rotation=45)
     plt.gca().get_yaxis().set_major_formatter(FuncFormatter(lambda x, p: format(int(x), ',')))
     plt.minorticks_on()
     plt.gca().xaxis.set_tick_params(which='minor', bottom=False)
+    plt.gca().xaxis.set_tick_params(which='major', pad=-2)
     plt.gca().set_xlim(left=-0.05)
     plt.gca().set_ylim(bottom=0, top=totals.max() * 1.1)
     plt.xlabel('Fecha')
@@ -87,6 +91,7 @@ def plot_daily_doses(labels, dates, numbers):
 
     plt.axvline(x=n_days-1 - 14, ls='--', c='darkgray', zorder=0)
     plt.axvline(x=n_days-1 - 28, ls='--', c='darkgray', zorder=0)
+    plt.axvline(x=n_days-1 - 56, ls='--', c='darkgray', zorder=0)
 
     plt.legend(loc='upper left', ncol=1)
     plt.grid(which='major', ls='--', lw=.5, c='gray')
