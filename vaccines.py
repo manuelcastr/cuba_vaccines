@@ -3,7 +3,7 @@ from datetime import date
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter, MaxNLocator
+from matplotlib.ticker import FuncFormatter
 
 
 def read_data_file(filename):
@@ -25,7 +25,6 @@ def common_style_settings(dates, n_days, y_max, format_func=None):
             x_labels[n_days-1 - i] = ''
     plt.xticks(range(n_days), x_labels, rotation=45)
 
-    # plt.gca().get_yaxis().set_major_formatter(FuncFormatter(lambda x, p: format(int(x), ',')))
     if format_func:
         plt.gca().get_yaxis().set_major_formatter(FuncFormatter(format_func))
 
@@ -79,8 +78,6 @@ def plot_daily_doses(labels, dates, numbers):
     for i in range(1, 4):
         plt.bar(xs + width * (i-2), dataset[i], width, label=labels[i+1], zorder=100,
                 color=colors[i-1], edgecolor='k', linewidth=.5)
-
-    plt.plot(xs, dataset[0], zorder=1, c='tab:red', label='Total diario')
 
     common_style_settings(dates, n_days, dataset[0].max(),
                           format_func=lambda x, p: f'{x*1e-3:1.0f} K' if x > 0 else '')
