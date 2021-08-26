@@ -3,7 +3,7 @@ from datetime import date
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
+from matplotlib.ticker import FuncFormatter, MultipleLocator, FixedLocator, AutoMinorLocator
 
 
 def read_data_file(filename):
@@ -23,8 +23,13 @@ def common_style_settings(dates, n_days, y_max, format_func=None):
     for i in range(n_days - 1):
         if i % 7:
             x_labels[n_days-1 - i] = ''
-    plt.xticks(range(n_days), x_labels, rotation=45)
-
+    use_labels = np.array(x_labels)
+    use_labels[[1, 2]] = ''
+    tick_positions = np.where(x_labels)[0]
+    plt.xticks(tick_positions, use_labels[tick_positions], rotation=45)
+    plt.gca().set_xticks(range(n_days), minor=True)
+    y_minor = AutoMinorLocator(5)
+    plt.gca().yaxis.set_minor_locator(y_minor)
     if format_func:
         plt.gca().get_yaxis().set_major_formatter(FuncFormatter(format_func))
 
@@ -37,8 +42,7 @@ def common_style_settings(dates, n_days, y_max, format_func=None):
     plt.gca().spines['right'].set_visible(False)
     plt.gca().spines['top'].set_visible(False)
 
-    plt.minorticks_on()
-    plt.gca().xaxis.set_tick_params(which='minor', bottom=False)
+    plt.gca().xaxis.set_tick_params(which='minor', width=.6)
     plt.gca().xaxis.set_tick_params(which='major', pad=-2)
 
     plt.grid(which='major', axis='y', ls=':', lw=.5, c='gray')
