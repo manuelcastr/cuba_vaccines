@@ -18,7 +18,7 @@ def read_data_file(filename):
     return labels, dates, np.array(numbers)
 
 
-def common_style_settings(dates, n_days, y_max, format_func=None):
+def common_style_settings(dates, n_days, y_max, y_label='', format_func=None):
     x_labels = [d.strftime("%d/%m") for d in dates]
     for i in range(n_days - 1):
         if i % 7:
@@ -37,7 +37,8 @@ def common_style_settings(dates, n_days, y_max, format_func=None):
     plt.gca().set_ylim(bottom=0, top=y_max * 1.05)
 
     plt.xlabel('Fecha')
-    plt.ylabel('Cantidad')
+    plt.ylabel(y_label, rotation=0)
+    plt.gca().yaxis.set_label_coords(-0.015, 1)
 
     plt.gca().spines['right'].set_visible(False)
     plt.gca().spines['top'].set_visible(False)
@@ -63,7 +64,7 @@ def plot_accumulate_doses(labels, dates, numbers):
     plt.fill_between(xs, numbers[:, 2], label=labels[3], color='tab:green', zorder=11)
     plt.fill_between(xs, numbers[:, 3], label=labels[4], color='tab:orange', zorder=12)
 
-    common_style_settings(dates, n_days, numbers[:, 1].max(),
+    common_style_settings(dates, n_days, numbers[:, 1].max(), 'Millones',
                           format_func=lambda x, p: f'{x*1e-6:1.1f} M' if x > 0 else '')
 
     plt.gca().spines['bottom'].set_zorder(100)
@@ -83,7 +84,7 @@ def plot_daily_doses(labels, dates, numbers):
         plt.bar(xs + width * (i-2), dataset[i], width, label=labels[i+1], zorder=100,
                 color=colors[i-1], edgecolor='k', linewidth=.5)
 
-    common_style_settings(dates, n_days, dataset[0].max(),
+    common_style_settings(dates, n_days, dataset[0].max(), 'Miles',
                           format_func=lambda x, p: f'{x*1e-3:1.0f} K' if x > 0 else '')
 
 
@@ -106,7 +107,7 @@ def plot_stacked_daily_doses(labels, dates, numbers):
         plt.plot([xs[i] - width / 2, xs[i] + width / 2], [dataset[1][i]] * 2, c='k', lw=.5, zorder=200)
         plt.plot([xs[i] - width / 2, xs[i] + width / 2], [dataset[[1, 2], i].sum()] * 2, c='k', lw=.5, zorder=200)
 
-    common_style_settings(dates, n_days, dataset[0].max(),
+    common_style_settings(dates, n_days, dataset[0].max(), 'Miles',
                           format_func=lambda x, p: f'{x*1e-3:1.0f} K' if x > 0 else '')
 
 
