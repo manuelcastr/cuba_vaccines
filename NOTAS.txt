@@ -1,0 +1,5 @@
+A partir del día 25 de septiembre, las dosis de Soberana Plus están
+consideradas en los datos de primeras dosis, y se reportan los datos
+de terceras dosis y esquema completo como valores independientes para
+reflejar el hecho de que Soberana Plus para convalecientes es dosis
+única.
