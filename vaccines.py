@@ -63,7 +63,7 @@ def common_style_settings(dates, n_days, y_max, y_label='', format_func=None, fi
 
 
 def plot_accumulate_doses(labels, dates, numbers):
-    plt.figure('Acumulados por dosis', (13, 6))
+    plt.figure('vac-Acumulados_dosis', (13, 6))
     plt.suptitle('Acumulados por dosis')
 
     n_days = len(dates)
@@ -81,7 +81,7 @@ def plot_accumulate_doses(labels, dates, numbers):
 
 
 def plot_daily_doses(labels, dates, numbers):
-    plt.figure('Dosis diarias', (13, 6))
+    plt.figure('vac-Dosis_diarias', (13, 6))
     plt.suptitle(f'Dosis diarias (Últimos {len(dates) - 1} días)')
 
     n_days = len(dates)
@@ -103,7 +103,7 @@ def plot_daily_doses(labels, dates, numbers):
 
 
 def plot_stacked_daily_doses(labels, dates, numbers):
-    plt.figure('Dosis diarias (stack)', (13, 6))
+    plt.figure('vac-Dosis_diarias_stack', (13, 6))
     plt.suptitle('Dosis diarias')
 
     n_days = len(dates)

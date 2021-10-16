@@ -65,7 +65,7 @@ def common_style_settings(dates, n_days, y_max, y_label='', format_func=None, fi
 
 
 def plot_daily_cases(labels, dates, numbers):
-    plt.figure('Casos activos', (13, 6))
+    plt.figure('cov-Casos_activos', (13, 6))
     plt.suptitle('Casos diarios y activos')
 
     n_days = len(dates)
@@ -81,7 +81,7 @@ def plot_daily_cases(labels, dates, numbers):
 
 
 def plot_accumulated_cases(dates, numbers):
-    plt.figure('Casos acumulados', (13, 6))
+    plt.figure('cov-Casos_acumulados', (13, 6))
     plt.suptitle('Casos acumulados')
 
     n_days = len(dates)
@@ -97,7 +97,7 @@ def plot_accumulated_cases(dates, numbers):
 
 
 def plot_daily_deaths(labels, dates, numbers):
-    plt.figure('Fallecidos diarios', (13, 6))
+    plt.figure('cov-Fallecidos_diarios', (13, 6))
     plt.suptitle('Fallecidos diarios y acumulado')
 
     n_days = len(dates)
@@ -140,7 +140,7 @@ def plot_condition_vs_actives(labels, dates, numbers):
     def percent(a, b):
         return np.round(a / b * 100, 2)
 
-    plt.figure('Porcientos respecto a casos', (13, 6))
+    plt.figure('cov-Porcientos_respecto_casos', (13, 6))
     plt.suptitle('Porciento de seriedad en casos diarios')
 
     n_days = len(dates)
@@ -157,15 +157,50 @@ def plot_condition_vs_actives(labels, dates, numbers):
                           legend=True, loc='best')
 
 
+def plot_tests_vs_cases(labels, dates, numbers):
+    samples = numbers[:, 0]
+    cases = numbers[:, 1]
+
+    plt.figure('cov-Muestras_realizadas', (13, 6))
+    plt.suptitle('Muestras realizadas y casos positivos')
+
+    n_days = len(dates)
+    xs = range(n_days)
+    plt.plot(xs, samples, label=labels[0], color='tab:green', lw=2)
+    plt.plot(xs, cases, label=labels[1], color='tab:red', lw=2)
+
+    common_style_settings(dates, n_days, samples.max(), '',
+                          format_func=lambda x, p: f'{x*1e-3:1.0f} mil' if x > 0 else '', auto_y=2,
+                          legend=True, loc='upper left')
+
+
+def plot_tests_positivity(labels, dates, numbers):
+    samples = numbers[:, 0]
+    cases = numbers[:, 1]
+
+    plt.figure('cov-Positividad_muestras', (13, 6))
+    plt.suptitle('Positividad de muestras')
+
+    n_days = len(dates)
+    xs = range(n_days)
+    positives = np.round(cases / samples * 100, 2)
+    plt.plot(xs, positives, label=labels[0], color='tab:red', lw=2)
+
+    common_style_settings(dates, n_days, positives.max(), '',
+                          format_func=lambda x, p: f'{x:1.1f} %' if x > 0 else '', auto_y=2,
+                          legend=False, loc='upper left')
+
+
 def plot_situation(filename, daily_labels=None, deaths_labels=None):
     column_labels, dates, numbers = read_data_file(filename)
-    labels = column_labels[1:3] if not daily_labels else daily_labels
-    plot_daily_cases(labels, dates, numbers[:, :2])
-    plot_accumulated_cases(dates, numbers[:, 2])
-    labels = column_labels[4:6] if not deaths_labels else deaths_labels
-    plot_daily_deaths(labels, dates, numbers[:, 3:5])
-    plot_condition_vs_actives(column_labels[[4, 6, 7]], dates, numbers[:, [0, 3, 5, 6]])
-
+    labels = column_labels[2:4] if not daily_labels else daily_labels
+    plot_daily_cases(labels, dates, numbers[:, 1:3])
+    plot_accumulated_cases(dates, numbers[:, 3])
+    labels = column_labels[5:7] if not deaths_labels else deaths_labels
+    plot_daily_deaths(labels, dates, numbers[:, 4:6])
+    plot_condition_vs_actives(column_labels[[6, 7, 8]], dates, numbers[:, [1, 4, 6, 7]])
+    plot_tests_vs_cases(column_labels[[1, 2]], dates, numbers[:, :2])
+    plot_tests_positivity(column_labels[[1, 2]], dates, numbers[:, :2])
     plt.show()
 
 
