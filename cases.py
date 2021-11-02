@@ -198,7 +198,7 @@ def plot_situation(filename, daily_labels=None, deaths_labels=None):
     plot_accumulated_cases(dates, numbers[:, 3])
     labels = column_labels[5:7] if not deaths_labels else deaths_labels
     plot_daily_deaths(labels, dates, numbers[:, 4:6])
-    plot_condition_vs_actives(column_labels[[6, 7, 8]], dates, numbers[:, [1, 4, 6, 7]])
+    plot_condition_vs_actives(column_labels[[5, 7, 8]], dates, numbers[:, [1, 4, 6, 7]])
     plot_tests_vs_cases(column_labels[[1, 2]], dates, numbers[:, :2])
     plot_tests_positivity(column_labels[[1, 2]], dates, numbers[:, :2])
     plt.show()

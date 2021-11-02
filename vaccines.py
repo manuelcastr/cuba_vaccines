@@ -57,7 +57,7 @@ def common_style_settings(dates, n_days, y_max, y_label='', format_func=None, fi
     plt.grid(which='major', axis='y', ls=':', lw=.5, c='gray')
     plt.grid(which='minor', axis='y', ls=':', lw=.3, c='gray')
 
-    plt.legend(loc='upper left', ncol=1)
+    plt.legend(loc='upper left', ncol=1).set_zorder(500)
 
     plt.tight_layout()
 
@@ -68,10 +68,10 @@ def plot_accumulate_doses(labels, dates, numbers):
 
     n_days = len(dates)
     xs = range(n_days)
-    plt.fill_between(xs, numbers[:, 1], label=labels[0], color='tab:blue', zorder=10)
-    plt.fill_between(xs, numbers[:, 2], label=labels[1], color='tab:green', zorder=11)
-    plt.fill_between(xs, numbers[:, 3], label=labels[2], color='tab:orange', zorder=12)
-    plt.fill_between(xs, numbers[:, 4], label=labels[3], color=(.88, .39, .0), zorder=11)
+    plt.fill_between(xs, numbers[:, 1], label=labels[0], color='tab:blue', zorder=10, edgecolor='k', lw=.6)
+    plt.fill_between(xs, numbers[:, 2], label=labels[1], color='tab:green', zorder=11, edgecolor='k', lw=.3)
+    plt.fill_between(xs, numbers[:, 3], label=labels[2], color='tab:orange', zorder=12, edgecolor='k', lw=.3)
+    plt.fill_between(xs, numbers[:, 4], label=labels[3], color=(.88, .39, .0), zorder=11, edgecolor='k', lw=.3)
 
     common_style_settings(dates, n_days, numbers[:, 1].max(), 'Millones',
                           format_func=lambda x, p: f'{x*1e-6:1.1f} M' if x > 0 else '')
