@@ -1,4 +1,4 @@
-#!python3.9
+#!C:/Users/manue/VirtualEnvs/WorkPy3.9/Scripts/python.exe
 import pathlib
 from datetime import date
 
@@ -21,13 +21,13 @@ def read_data_file(filename):
 
 def common_style_settings(figure: plt.Figure, dates, n_days, y_max, y_label='',
                           format_func=None, auto_y=5, legend=True, loc='upper left',
-                          span=28):
+                          span=28, label_margin=4):
     x_dates = [d.strftime("%d/%m/%y") for d in dates]
     x_labels = [''] * len(x_dates)
     for i in range(len(x_labels) - 1, 0, -span):
         x_labels[i] = x_dates[i]
     x_labels[0] = x_dates[0]
-    for i in range(1, 4):
+    for i in range(1, label_margin):
         if x_labels[i]:
             x_labels[i] = '\n'
 
@@ -66,12 +66,13 @@ def common_style_settings(figure: plt.Figure, dates, n_days, y_max, y_label='',
 
 
 def plot_daily_cases(labels, dates, numbers, suptitle='Casos diarios y activos', **kwargs):
-    fig: plt.Figure = plt.figure(suptitle, (13, 6))
+    fig: plt.Figure = plt.figure(suptitle, (13, 6), dpi=175)
     fig.suptitle(suptitle)
 
     n_days = len(dates)
-    xs = range(n_days)
-    fig.gca().plot(xs, numbers[:, 0], label=labels[0], color='tab:orange', marker='.', lw=2)
+    xs = np.arange(n_days)
+
+    fig.gca().plot(xs, numbers[:, 0], label=labels[0], color='tab:orange', lw=1)  # marker='.', markersize=3
     fig.gca().plot(xs, numbers[:, 1], label=labels[1], color='tab:red', lw=2)
 
     y_max = numbers[:, 1].max()
@@ -89,8 +90,8 @@ def plot_daily_cases(labels, dates, numbers, suptitle='Casos diarios y activos',
     return fig
 
 
-def plot_accumulated_cases(dates, numbers, suptitle='Casos acumulados'):
-    fig: plt.Figure = plt.figure(suptitle, (13, 6))
+def plot_accumulated_cases(dates, numbers, suptitle='Casos acumulados', **kwargs):
+    fig: plt.Figure = plt.figure(suptitle, (13, 6), dpi=175)
     fig.suptitle(suptitle)
 
     n_days = len(dates)
@@ -109,7 +110,7 @@ def plot_accumulated_cases(dates, numbers, suptitle='Casos acumulados'):
 
     common_style_settings(fig, dates, n_days, numbers.max(), '',
                           format_func=label_format_func,
-                          auto_y=2, legend=False)
+                          auto_y=2, legend=False, **kwargs)
 
     fig.gca().spines['bottom'].set_zorder(100)
     fig.gca().spines['left'].set_zorder(100)
@@ -117,8 +118,9 @@ def plot_accumulated_cases(dates, numbers, suptitle='Casos acumulados'):
     return fig
 
 
-def plot_daily_deaths(labels, dates, numbers, suptitle='Fallecidos diarios y acumulado'):
-    fig: plt.Figure = plt.figure(suptitle, (13, 6))
+def plot_daily_deaths(labels, dates, numbers, suptitle='Fallecidos diarios y acumulado',
+                      **kwargs):
+    fig: plt.Figure = plt.figure(suptitle, (13, 6), dpi=175)
     fig.suptitle(suptitle)
 
     n_days = len(dates)
@@ -127,7 +129,7 @@ def plot_daily_deaths(labels, dates, numbers, suptitle='Fallecidos diarios y acu
 
     common_style_settings(fig, dates, n_days, numbers[:, 1].max(), '',
                           format_func=lambda x, p: f'{x*1e-3:1.0f} mil' if x > 0 else '',
-                          legend=False)
+                          legend=False, **kwargs)
     fig.gca().spines['bottom'].set_zorder(100)
     fig.gca().spines['left'].set_zorder(100)
     ax1: plt.Axes = fig.gca()
@@ -135,7 +137,7 @@ def plot_daily_deaths(labels, dates, numbers, suptitle='Fallecidos diarios y acu
     ax1.grid(False)
 
     ax2: plt.Axes = ax1.twinx()
-    ax2.plot(xs, numbers[:, 0], label=labels[0], color='tab:orange', marker='.', lw=2)
+    ax2.plot(xs, numbers[:, 0], label=labels[0], color='tab:orange', lw=1)  # marker='.',
     ax2.set_ylim(0, numbers[:, 0].max() * 5)
     y2_max = round(numbers[:, 0].max(), -2)
     ax2.yaxis.set_ticks([0, y2_max])
@@ -165,7 +167,7 @@ def plot_condition_vs_actives(labels, dates, numbers,
     def percent(a, b):
         return np.round(a / b * 100, 2)
 
-    fig: plt.Figure = plt.figure(suptitle, (13, 6))
+    fig: plt.Figure = plt.figure(suptitle, (13, 6), dpi=175)
     fig.suptitle(suptitle)
 
     n_days = len(dates)
@@ -192,13 +194,14 @@ def plot_tests_vs_cases(labels, dates, numbers,
     samples = numbers[:, 0]
     cases = numbers[:, 1]
 
-    fig: plt.Figure = plt.figure(suptitle, (13, 6))
+    fig: plt.Figure = plt.figure(suptitle, (13, 6), dpi=175)
     fig.suptitle(suptitle)
 
     n_days = len(dates)
     xs = np.arange(n_days)
+    # poly = np.poly1d(np.polyfit(xs, samples, deg=7))
     fig.gca().plot(xs, samples, label=labels[0], color='tab:green', lw=2)
-    # fig.gca().plot(xs, samples.cumsum() / (xs + 1),color='tab:green', lw=1.5, ls=':')
+    # fig.gca().plot(xs, poly(xs), color='tab:green', lw=1.5, ls=':')
     fig.gca().plot(xs, cases, label=labels[1], color='tab:red', lw=2)
 
     common_style_settings(fig, dates, n_days, samples.max(), '',
@@ -212,7 +215,7 @@ def plot_tests_positivity(labels, dates, numbers, suptitle='Positividad de muest
     samples = numbers[:, 0]
     cases = numbers[:, 1]
 
-    fig: plt.Figure = plt.figure(suptitle, (13, 6))
+    fig: plt.Figure = plt.figure(suptitle, (13, 6), dpi=175)
     fig.suptitle(suptitle)
 
     n_days = len(dates)
@@ -231,19 +234,20 @@ def report_situation(filename, daily_labels=None, deaths_labels=None,
                      images_path=None, show=True):
     column_labels, dates, numbers = read_data_file(filename)
     labels = column_labels[2:4] if not daily_labels else daily_labels
-    fig_daily_full = plot_daily_cases(labels, dates, numbers[:, 1:3], span=28)
+    fig_daily_full = plot_daily_cases(labels, dates, numbers[:, 1:3],
+                                      span=28, label_margin=7)
     n = 90
     fig_daily_last = plot_daily_cases(labels[-n:], dates[-n:], numbers[-n:, 1:3],
                                       f'Casos diarios y activos (últimos {n} días)',
                                       loc='best', span=7)
 
-    fig_accum = plot_accumulated_cases(dates, numbers[:, 3])
+    fig_accum = plot_accumulated_cases(dates, numbers[:, 3], label_margin=7)
 
     labels = column_labels[5:7] if not deaths_labels else deaths_labels
-    fig_deaths = plot_daily_deaths(labels, dates, numbers[:, 4:6])
+    fig_deaths = plot_daily_deaths(labels, dates, numbers[:, 4:6], label_margin=7)
 
     fig_condition = plot_condition_vs_actives(column_labels[[5, 7, 8]],
-                                              dates[-n:], numbers[-n:, [1, 4, 6, 7]],
+                                              dates[-n:], numbers[-n:, [1, 4, 6, 7]],  # first index is a 1
                                               f'Porciento de seriedad en casos diarios (últimos {n} días)',
                                               span=7)
     fig_tests = plot_tests_vs_cases(column_labels[[1, 2]], dates[-n:], numbers[-n:, :2],
@@ -275,5 +279,5 @@ if __name__ == '__main__':
     report_situation('cases.txt',
                      daily_labels=DAILY_LABELS,
                      deaths_labels=DEATHS_LABELS,
-                     images_path='./',
+                     images_path='D:/Users/manue/Desktop/Cuba COVID/',
                      show=False)

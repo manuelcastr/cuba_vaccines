@@ -1,4 +1,4 @@
-#!python3.9
+#!C:/Users/manue/VirtualEnvs/WorkPy3.9/Scripts/python.exe
 import pathlib
 from datetime import date
 
@@ -66,7 +66,7 @@ def common_style_settings(fig: plt.Figure, dates, n_days, y_max, y_label='',
 
 
 def plot_accumulate_doses(labels, dates, numbers, suptitle='Acumulados por dosis'):
-    fig: plt.Figure = plt.figure(suptitle, (13, 6))
+    fig: plt.Figure = plt.figure(suptitle, (13, 6), dpi=175)
     plt.suptitle(suptitle)
 
     n_days = len(dates)
@@ -93,7 +93,7 @@ def plot_accumulate_doses(labels, dates, numbers, suptitle='Acumulados por dosis
 
 
 def plot_daily_doses(labels, dates, numbers, suptitle='Dosis diarias'):
-    fig: plt.Figure = plt.figure(suptitle, (13, 6))
+    fig: plt.Figure = plt.figure(suptitle, (13, 6), dpi=175)
     fig.suptitle(suptitle)
 
     n_days = len(dates)
@@ -116,7 +116,7 @@ def plot_daily_doses(labels, dates, numbers, suptitle='Dosis diarias'):
 
 
 def plot_stacked_daily_doses(labels, dates, numbers, suptitle='Dosis diarias '):
-    fig: plt.Figure = plt.figure(suptitle, (13, 6))
+    fig: plt.Figure = plt.figure(suptitle, (15, 6), dpi=175)
     fig.suptitle(suptitle)
     axes = fig.gca()
 
@@ -184,5 +184,5 @@ if __name__ == '__main__':
     report_vaccination('vaccines.txt',
                        accum_labels=ACCUMULATED_LABELS,
                        daily_labels=DAILY_DOSES_LABELS,
-                       images_path='./',
+                       images_path='D:/Users/manue/Desktop/Cuba COVID/',
                        show=False)
