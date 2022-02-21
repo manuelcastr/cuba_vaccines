@@ -204,6 +204,11 @@ def plot_tests_vs_cases(labels, dates, numbers,
     # fig.gca().plot(xs, poly(xs), color='tab:green', lw=1.5, ls=':')
     fig.gca().plot(xs, cases, label=labels[1], color='tab:red', lw=2)
 
+    if win := kwargs.get('avg', None):
+        moving_avg = [(s_win := samples[max(0, i-win+1):i+1]).sum() / len(s_win) for i in range(len(samples))]
+        fig.gca().plot(xs, moving_avg, label=f'Media {win} días', color='tab:green', lw=1.5, ls=':')
+        kwargs.pop('avg')
+
     common_style_settings(fig, dates, n_days, samples.max(), '',
                           format_func=lambda x, p: f'{x*1e-3:1.0f} mil' if x > 0 else '', auto_y=2,
                           legend=True, **kwargs)
@@ -223,6 +228,11 @@ def plot_tests_positivity(labels, dates, numbers, suptitle='Positividad de muest
     positives = np.round(cases / samples * 100, 2)
     fig.gca().plot(xs, positives, label=labels[0], color='tab:red', lw=2)
     # fig.gca().plot(xs, positives.cumsum() / (xs + 1), color='tab:red', lw=1.5, ls=':')
+
+    if win := kwargs.get('avg', None):
+        moving_avg = [(s_win := positives[max(0, i-win+1):i+1]).sum() / len(s_win) for i in range(len(positives))]
+        fig.gca().plot(xs, moving_avg, label=f'Media {win} días', color='tab:red', lw=1.5, ls=':')
+        kwargs.pop('avg')
 
     common_style_settings(fig, dates, n_days, positives.max(), '',
                           format_func=lambda x, p: f'{x:1.1f} %' if x > 0 else '', auto_y=2,
@@ -252,10 +262,10 @@ def report_situation(filename, daily_labels=None, deaths_labels=None,
                                               span=7)
     fig_tests = plot_tests_vs_cases(column_labels[[1, 2]], dates[-n:], numbers[-n:, :2],
                                     f'Muestras realizadas y casos positivos (últimos {n} días)',
-                                    span=7, loc='best')
+                                    span=7, loc='best', avg=7)
     fig_positivity = plot_tests_positivity(column_labels[[1, 2]], dates[-n:], numbers[-n:, :2],
                                            f'Positividad de muestras (últimos {n} días)',
-                                           span=7)
+                                           span=7, avg=7)
 
     if images_path:
         images_path = pathlib.Path(images_path)
